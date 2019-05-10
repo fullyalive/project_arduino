@@ -28,3 +28,6 @@
 - [analogRead(pin)](https://www.arduino.cc/reference/ko/language/functions/analog-io/analogread/) - 지정한 아날로그 핀에서 값을 읽는다.
 - [tone(pin, frequency)](https://www.arduino.cc/reference/ko/language/functions/advanced-io/tone/) - 핀에 특정 주파수(50% 듀티 사이클)의 구형파를 발생시킨다.
 - [noTone(pin)](https://www.arduino.cc/reference/ko/language/functions/advanced-io/notone/) - tone() 에 의해 시작된 구형파의 발생을 멈춘다.
+
+##### 5.08(수)
+- [Serial.available()](https://www.arduino.cc/reference/ko/language/functions/communication/serial/available/) - Get the number of bytes (characters) available for reading from the serial port.
