@@ -31,3 +31,6 @@
 
 ##### 5.08(수)
 - [Serial.available()](https://www.arduino.cc/reference/ko/language/functions/communication/serial/available/) - Get the number of bytes (characters) available for reading from the serial port.
+
+##### 5.29(수)
+- [Serial.flush()](https://www.arduino.cc/en/Serial/Flush)
