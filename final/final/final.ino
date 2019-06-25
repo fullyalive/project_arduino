@@ -4,26 +4,27 @@ LedControl lc = LedControl(12, 11, 10, 1); // DIN, CLK, CS, 주소
 
 /* SOUND PART */
 int SOUND_SENSOR = A0;
-int sound_threshold = 22; // 소리 임계치
+int sound_threshold = 1; // 소리 임계치
 const int sampleWindow = 50; // Sample window width in mS (50 mS = 20Hz)
 unsigned int sample;
 
 /* VIBRATION PART*/
 int VIBRATION_SENSOR = A1;
-int vibration_threshold = 500; // 진동 임계치
+int vibration_threshold = 10; // 진동 임계치
 
 /* GAS PART */
-int MQ_2_SENSOR = A2;
-int MQ_7_SENSOR = A3;
-int mq2_threshold = 500;
-int mq7_threshold = 500;
+int MQ_2_SENSOR = A2; // 스모그, 메탄, 일산화탄소 감
+int MQ_7_SENSOR = A3; // 일산화탄소 감지
+int mq2_threshold = 550; // mq2 임계치
+int mq7_threshold = 300; // mq7 임계치
 
 int gap = 500;
+int repNum = 3;
 
 void setup() {
   Serial.begin(9600); //시리얼통신 설정 9600
   lc.shutdown(0, false);    // 절전모드 해제
-  lc.setIntensity(0, 10);   // 밝기설정
+  lc.setIntensity(0, 15);   // 밝기설정
   lc.clearDisplay(0);      // 화면정리
   pinMode(SOUND_SENSOR, INPUT);
   pinMode(VIBRATION_SENSOR, INPUT);
@@ -57,30 +58,28 @@ void loop() {
   }
   peakToPeak = signalMax - signalMin;  // max - min = peak-peak amplitude
   double sound_value = (peakToPeak * 3.3) / 1024;  // convert to volts
-  Serial.print("Sound_value : ");
-  Serial.println(sound_value);
-  if (sound_value > 3) {
-    for (int i = 0; i < 2; i++) {
-      soundReact_1();
-      delay(gap);
-      soundReact_2();
+    Serial.print("Sound_value : ");
+    Serial.println(sound_value);
+    if (sound_value > sound_threshold) {
+      for (int i = 0; i < repNum; i++) {
+        soundReact_1();
+        soundReact_2();
+        ledSet();
+      }
+    } else {
       ledSet();
     }
-  } else {
-    ledSet();
-  }
 
   /* VIBRATION_REACT */
 
   long vibration_value = TP_init();
-  delay(50);
   Serial.print("vibration_value = ");
   Serial.println(vibration_value);
   if (vibration_value > vibration_threshold) {
-    for (int i = 0; i < 2; i++) {
-      vibrationReact_1();
+    for (int i = 0; i < repNum; i++) {
       delay(gap);
-      vibrationReact_2();
+      vibrationReact_1();
+      vibrationReact_1();
       ledSet();
     }
   } else {
@@ -90,28 +89,26 @@ void loop() {
   /* GAS_REACT */
   int mq2_value = analogRead(A2);
   int mq7_value = analogRead(A3);
-  Serial.print("mq2_value : ");
-  Serial.println(mq2_value);
-  Serial.print("mq7_value: ");
-  Serial.println(mq7_value);
-
-  if (mq2_value > mq2_threshold) {
-    for (int i = 0; i < 2; i++) {
-      gasReact_1();
-      delay(gap);
-      gasReact_2();
+    Serial.print("mq2_value : ");
+    Serial.println(mq2_value);
+    Serial.print("mq7_value: ");
+    Serial.println(mq7_value);
+  
+    if (mq2_value > mq2_threshold) {
+      for (int i = 0; i < repNum; i++) {
+        gasReact_1();
+        gasReact_2();
+        ledSet();
+      }
+    } else if (mq7_value > mq7_threshold) {
+      for (int i = 0; i < repNum; i++) {
+        gasReact_1();
+        gasReact_2();
+        ledSet();
+      }
+    } else {
       ledSet();
     }
-  } else if (mq7_value > mq7_threshold) {
-    for (int i = 0; i < 2; i++) {
-      gasReact_1();
-      delay(gap);
-      gasReact_2();
-      ledSet();
-    }
-  } else {
-    ledSet();
-  }
 }
 
 void soundReact_1() {
@@ -155,61 +152,53 @@ void soundReact_2() {
 }
 
 void vibrationReact_1() {
-  lc.setLed(0, 0, 0, true);
-  lc.setLed(0, 0, 1, true);
-  lc.setLed(0, 0, 3, true);
-  lc.setLed(0, 0, 7, true);
-  lc.setLed(0, 1, 0, true);
-  lc.setLed(0, 1, 1, true);
-  lc.setLed(0, 1, 4, true);
-  lc.setLed(0, 1, 6, true);
-  lc.setLed(0, 2, 0, true);
-  lc.setLed(0, 2, 1, true);
-  lc.setLed(0, 2, 5, true);
+  lc.setLed(0, 0, 6, true);
+  lc.setLed(0, 1, 3, true);
+  lc.setLed(0, 1, 5, true);
+  lc.setLed(0, 2, 2, true);
+  lc.setLed(0, 2, 3, true);
+  lc.setLed(0, 2, 6, true);
   lc.setLed(0, 3, 0, true);
   lc.setLed(0, 3, 1, true);
-  lc.setLed(0, 3, 4, true);
-  lc.setLed(0, 3, 6, true);
+  lc.setLed(0, 3, 2, true);
+  lc.setLed(0, 3, 3, true);
+  lc.setLed(0, 3, 5, true);
   lc.setLed(0, 4, 0, true);
   lc.setLed(0, 4, 1, true);
+  lc.setLed(0, 4, 2, true);
   lc.setLed(0, 4, 3, true);
-  lc.setLed(0, 4, 7, true);
-  lc.setLed(0, 5, 0, true);
-  lc.setLed(0, 5, 1, true);
-  lc.setLed(0, 6, 0, true);
-  lc.setLed(0, 6, 1, true);
-  lc.setLed(0, 6, 2, true);
-  lc.setLed(0, 7, 0, true);
-  lc.setLed(0, 7, 1, true);
-  lc.setLed(0, 7, 2, true);
-  lc.setLed(0, 7, 3, true);
+  lc.setLed(0, 4, 6, true);
+  lc.setLed(0, 5, 2, true);
+  lc.setLed(0, 5, 3, true);
+  lc.setLed(0, 5, 5, true);
+  lc.setLed(0, 6, 3, true);
+  lc.setLed(0, 6, 6, true);
+  lc.setLed(0, 7, 5, true);
 }
 
 void vibrationReact_2() {
-  lc.setLed(0, 0, 0, true);
-  lc.setLed(0, 0, 1, true);
-  lc.setLed(0, 1, 0, true);
-  lc.setLed(0, 1, 1, true);
-  lc.setLed(0, 1, 4, true);
-  lc.setLed(0, 1, 6, true);
-  lc.setLed(0, 2, 0, true);
-  lc.setLed(0, 2, 1, true);
-  lc.setLed(0, 2, 5, true);
+  lc.setLed(0, 0, 6, true);
+  lc.setLed(0, 1, 3, true);
+  lc.setLed(0, 1, 7, true);
+  lc.setLed(0, 2, 2, true);
+  lc.setLed(0, 2, 3, true);
+  lc.setLed(0, 2, 6, true);
   lc.setLed(0, 3, 0, true);
   lc.setLed(0, 3, 1, true);
-  lc.setLed(0, 3, 4, true);
-  lc.setLed(0, 3, 6, true);
+  lc.setLed(0, 3, 2, true);
+  lc.setLed(0, 3, 3, true);
+  lc.setLed(0, 3, 7, true);
   lc.setLed(0, 4, 0, true);
   lc.setLed(0, 4, 1, true);
-  lc.setLed(0, 5, 0, true);
-  lc.setLed(0, 5, 1, true);
-  lc.setLed(0, 6, 0, true);
-  lc.setLed(0, 6, 1, true);
-  lc.setLed(0, 6, 2, true);
-  lc.setLed(0, 7, 0, true);
-  lc.setLed(0, 7, 1, true);
-  lc.setLed(0, 7, 2, true);
-  lc.setLed(0, 7, 3, true);
+  lc.setLed(0, 4, 2, true);
+  lc.setLed(0, 4, 3, true);
+  lc.setLed(0, 4, 6, true);
+  lc.setLed(0, 5, 2, true);
+  lc.setLed(0, 5, 3, true);
+  lc.setLed(0, 5, 7, true);
+  lc.setLed(0, 6, 3, true);
+  lc.setLed(0, 6, 6, true);
+  lc.setLed(0, 7, 7, true);
 }
 
 void gasReact_1() {
@@ -265,8 +254,8 @@ void gasReact_2() {
 }
 
 void ledSet() {
-  delay(50);
   for (int row = 0; row < 8; row++) {
+    delay(80);
     for (int col = 0; col < 8; col++) {
       lc.setLed(0, col, row, false);
       delay(10);
@@ -275,7 +264,7 @@ void ledSet() {
 }
 
 long TP_init() {
-  delay(10);
+  delay(1);
   long vibration_value = pulseIn (VIBRATION_SENSOR, HIGH);
   return vibration_value;
 }
