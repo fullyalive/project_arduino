@@ -5,6 +5,29 @@
 - 아두이노 프로젝트와 수업내용을 정리한다.
 - 프로젝트는 최대한 다른 method를 이용해 제작한다.
 
+## **Project**
+
+#### RefereeBox
+```
+공용 공간에서 공부하다가 소음, 진동, 흡연냄새로 인해 고통받는 사람을 위한 Arduino Device
+방해되는 상황에서 말로 해결하기 힘든 사람들을 위해, Referee Box의 디스플레이를 통해 메시지를 보낸다.
+
+SW-420, LM393, MQ-2, MQ-7을 이용하여 측정한 뒤 각 값에 대응하는 임계치를 넘은 입력치에 대해
+8x8 Display로 각기 다른 경고 아이콘을 출력한다.
+```
+- Arduino Uno
+- Arduino Uno Sensor Shield (SZH-EK049)
+- 진동센서 (SW-420)
+- 사운드 센서 (LM393)
+- 흡연센서 (MQ-2, MQ-7)
+- 8x8 Display Module * 3
+
+![](rm1.gif);
+![](rm2.gif);
+![](rm3.gif);
+![](rm4.gif);
+![](rm5.gif);
+
 
 ## **Lecture**
 
