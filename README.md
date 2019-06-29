@@ -22,11 +22,11 @@ SW-420, LM393, MQ-2, MQ-7을 이용하여 측정한 뒤 각 값에 대응하는 
 - 흡연센서 (MQ-2, MQ-7)
 - 8x8 Display Module * 3
 
-![](rm1.gif);
-![](rm2.gif);
-![](rm3.gif);
-![](rm4.gif);
-![](rm5.gif);
+![](rm1.gif)
+![](rm2.gif)
+![](rm3.gif)
+![](rm4.gif)
+![](rm5.gif)
 
 
 ## **Lecture**
